@@ -2,8 +2,8 @@
   import Hoverable from './Hoverable.svelte';
   import { createEventDispatcher } from 'svelte';
 
-  export let orgName: string = "walmartlabs";
-  export let projectName: string = "thorax";
+  export let orgName: string = "jasongedev";
+  export let projectName: string = "issue-browser";
 
   const dispatch = createEventDispatcher();
 

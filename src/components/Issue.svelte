@@ -6,7 +6,6 @@
   export let userLogin: string; 
   export let body: string;
   export let created: string;
-  export let updated: string;
 
 
   let isExpanded: boolean = false;

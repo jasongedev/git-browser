@@ -221,8 +221,7 @@
 						bind:state="{issue.state}"
 						bind:userLogin="{issue.user.login}"
 						bind:body="{issue.body}"
-						bind:created="{issue.created_at}"
-						bind:updated="{issue.updated_at}"/>
+						bind:created="{issue.created_at}"/>
 			  	</div>
 				{/each}
 			{/await}
