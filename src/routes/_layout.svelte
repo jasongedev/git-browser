@@ -1,9 +1,3 @@
-<script>
-	import Nav from '../components/Nav.svelte';
-
-	export let segment;
-</script>
-
 <style>
 	main {
 		position: relative;
@@ -12,10 +6,9 @@
 		padding: 2em;
 		margin: 0 auto;
 		box-sizing: border-box;
+		color: #041e42;
 	}
 </style>
-
-<Nav {segment}/>
 
 <main>
 	<slot></slot>
