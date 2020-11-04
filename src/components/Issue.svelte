@@ -1,19 +1,21 @@
 <script lang="ts">
-  import { slide } from 'svelte/transition';
-  export let title: string;
-  export let number: number;
-  export let state: string;
-  export let userLogin: string; 
-  export let body: string;
-  export let created: string;
+  import {onMount} from 'svelte';
+  import compromise from "compromise";
+  export let rowIndex;
+  export let issue;
 
-
+  let topics: Promise<[]> = Promise.resolve([]);
   let isExpanded: boolean = false;
+
+  async function getEntities(body) {
+    let doc = compromise(body)
+    topics = doc.topics().json();
+  }
 
   const expand = () => {
     isExpanded = !isExpanded;
+    console.log(issue);
   }
-
 </script>
 
 <style>
@@ -26,8 +28,8 @@
     cursor:pointer;
   }
   div {
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
   }
   .expandedIssue {
     background-color: lightgrey;
@@ -43,14 +45,17 @@
 <div>
 	<p >
     <h3 on:click="{expand}">
-      {title}
+      {issue.title}
     </h3>
-    <div>Issue #{number} is {state}</div>
+    <div>Issue #{issue.number} is {issue.state}</div>
+    {#await topics}
+    <div>{topics}</div>
+    {/await}
     {#if isExpanded == true}
       <div class="expandedIssue">
-        <div>{userLogin} says...</div>
-        <div>{body}</div>
-        <small class ="timeStamp">Issue created at {created}</small>
+        <div>{issue.user.login} says...</div>
+        <div>{issue.body}</div>
+        <small class ="timeStamp">Issue created at {issue.created_at}</small>
       </div>
     {/if}
 </div>

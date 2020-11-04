@@ -1,20 +1,36 @@
 <script lang="ts">
-  import Hoverable from './Hoverable.svelte';
-  import { createEventDispatcher } from 'svelte';
-
-  export let orgName: string = "jasongedev";
-  export let projectName: string = "issue-browser";
+  import {createEventDispatcher, onMount} from 'svelte';
+  import {fetchOrg} from './utils/API.svelte';
+  import Hoverable from './utils/Hoverable.svelte';
+	import successkid from 'images/successkid.jpg';
+  
+  export let orgName: string;
+  export let projectName: string;
+  export let fetchIssuesSignal: boolean;
 
   const dispatch = createEventDispatcher();
-
+  let org = Promise.resolve([]);
+  let orgNameInputElement: HTMLInputElement; 
+  let projectNameInputElement: HTMLInputElement;
+  
   const enterOrgName = () => {
-    document.getElementById("projectNameInput").focus();
-    dispatch('orgNameEntered');
+    projectNameInputElement.focus();
+    org = fetchOrg(orgName);
   }
 
   const enterProjectName = () => {
-    document.getElementById("projectNameInput").blur();
-    dispatch('projectNameEntered');
+    projectNameInputElement.blur();
+    fetchIssuesSignal = !fetchIssuesSignal;
+  }
+
+  const focusOrgName = () => {
+    orgNameInputElement.focus();
+    orgNameInputElement.select();
+  }
+
+  const focusProjectName = () => {
+    projectNameInputElement.select();
+    projectNameInputElement.focus();
   }
 
   const onKeyPressOrgName = e => {
@@ -25,73 +41,114 @@
     if (e.charCode === 13) enterProjectName();
   }
 
-  const onFocusOrgName = () => {
-    let orgNameInput = document.getElementById("orgNameInput") as HTMLInputElement;
-    orgNameInput.select();
-  }
-
-  const onFocusProjectName = () => {
-    let projectNameInput = document.getElementById("projectNameInput") as HTMLInputElement;
-    projectNameInput.select();
-  }
+	onMount(async () => {
+    orgNameInputElement = document.getElementById("orgNameInputElement") as HTMLInputElement;
+    projectNameInputElement = document.getElementById("projectNameInputElement") as HTMLInputElement;
+    org = fetchOrg(orgName);
+  })
 
 </script>
 
+<div class="inputsWrapper">
+  <figure>
+    {#if org == null}
+      <img alt="Empty" src="{successkid}">
+    {:else}
+      {#await org}
+        <img alt="Loading" src="{successkid}">
+      {:then org}
+        <img alt="Avatar" src="{org["avatar_url"]}">
+      {/await}
+    {/if}
+  </figure>
+
+  <div style="padding-left:0.5em"></div>
+  
+  <div>
+    <div class="topRowOuter">
+      <svelte:component this={Hoverable} let:hovering={isHoveringOrgNameInput}>
+        <div class="topRowInner" on:click={focusOrgName} class:isHoveringOrgNameInput>
+          <input class="orgNameInput" 
+          id="orgNameInputElement"
+          style="--width: {orgName.length * 0.6}em" 
+          bind:value={orgName}
+          on:keypress={onKeyPressOrgName}>
+          <div class="forwardSlash">/</div>
+        </div>
+      </svelte:component>
+    </div>
+
+    <svelte:component this={Hoverable} let:hovering={isHoveringProjectNameInput}>
+      <div on:click={focusProjectName} class:isHoveringProjectNameInput>
+        <input class="projectNameInput" 
+        id="projectNameInputElement" 
+        style="--width: {projectName.length * 0.6}em" 
+        bind:value={projectName}  
+        on:keypress={onKeyPressProjectName}>
+      </div>
+    </svelte:component>
+  </div>
+</div>
+
 <style>
+	figure {
+		text-align: center;
+		margin: 0 0 1em 0;
+	}
+
+	img {
+		width: 2.5em;
+		height: 2.5em;
+  }
+  
   input {
     border-color: white;
     border-style:solid;
     width: var(--width);
-    min-width: 3em;
+    min-width: 0.6em;
 		font-size: 1em;
     font-family: "Andale Mono", Courier, monospace
   }
-  .inputsTop {
+
+	.inputsWrapper {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+  }
+  
+  .topRowOuter {
+    display: flex;
+    align-items: flex-start;
+  }
+    
+  .topRowInner {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
   }
+
   .orgNameInput {
     color: #041e42;
   }
+
   .projectNameInput {
     color: #0071DC;
   }
+
   .forwardSlash {
+    user-select: none;
     color: #041e42;
+    font-family: "Andale Mono", Courier, monospace;
     font-size: 1em;
-    font-family: "Andale Mono", Courier, monospace
   }
+
   .isHoveringOrgNameInput .orgNameInput {
       border-color: #0071DC;
       border-radius: 4px;
   }
+
   .isHoveringProjectNameInput .projectNameInput {
       border-color: #0071DC;
       border-radius: 4px;
   }
 </style>
-
-<div>
-  <div class="inputsTop">
-    <svelte:component this={Hoverable} let:hovering={isHoveringOrgNameInput}>
-      <div class:isHoveringOrgNameInput>
-        <input class="orgNameInput" id="orgNameInput"
-        style="--width: {orgName.length * 0.6}em" 
-        bind:value={orgName} 
-        on:keypress={onKeyPressOrgName} 
-        on:focus={onFocusOrgName}>
-      </div>
-    </svelte:component>
-    <div class="forwardSlash">/</div>
-  </div>
-  <svelte:component this={Hoverable} let:hovering={isHoveringProjectNameInput}>
-    <div class:isHoveringProjectNameInput>
-      <input class="projectNameInput" id="projectNameInput" 
-      style="--width: {projectName.length * 0.6}em" 
-      bind:value={projectName}  
-      on:keypress={onKeyPressProjectName}
-      on:focus={onFocusProjectName}>
-    </div>
-  </svelte:component>
-</div>
