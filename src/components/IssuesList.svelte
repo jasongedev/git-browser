@@ -10,7 +10,7 @@
   let issues: [] = null;
   let pageIndex: number;
   let rowIndex: number;
-  let rowId: string;
+  let currRowId: string;
   let timer: number = 0;
   let responseTime: number = 0;
   let isLoading: boolean = true;
@@ -22,6 +22,7 @@
     responseTime = timer;
     timer = 0;
     rowIndex = 0;
+    rowSelect(0);
   }
 
   function newFetch(fetchIssuesSignal) {
@@ -35,7 +36,7 @@
   function rowSelect(rowIndex) {
     console.log(rowIndex)
     if (issues != null) {
-      //console.log(issues[rowIndex]);
+      currRowId = issues[rowIndex]["id"];
     }
   }
 
@@ -53,11 +54,16 @@
 <div class="issuesListWrapper">
   {#if issues != null} 
     <IssuesNav bind:issues bind:pageIndex bind:rowIndex bind:isLoading bind:timer bind:responseTime/>
-
     {#each issues as issue, index}
-      <div class="issueWrapper" id="issue#{index}">
-        <Issue bind:issue bind:rowIndex/>
-      </div>
+      {#if isLoading == true} 
+        <div class="loading issuesWrapper" id="issue#{index}">
+          <Issue bind:issue bind:currRowId/>
+        </div>
+      {:else}
+        <div class="issuesWrapper" id="issue#{index}">
+          <Issue bind:issue bind:currRowId/>
+        </div>
+      {/if}
     {/each}
   {/if}
 </div>
@@ -72,8 +78,10 @@
     padding-right: 1em;
 		margin-top: -2em;
   }
-
-	.issueWrapper {
+  .loading {
+    opacity: 0.5;
+  }
+	.issuesWrapper {
 		color: #041e42;
 		display: flex;
 		flex-direction: row;

@@ -14,7 +14,7 @@
   let projectNameInputElement: HTMLInputElement;
   
   const enterOrgName = () => {
-    projectNameInputElement.focus();
+    focusProjectName();
     org = fetchOrg(orgName);
   }
 

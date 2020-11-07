@@ -46,7 +46,7 @@
 <div class="issuesNavWrapper">
   <div class="leftAngleBracket" on:click="{navigateLeft}">←</div>
   {#if isLoading == true}
-    <div class="issuesNavLabel">Page {pageIndex} loading in {timer} ms</div>
+    <div class="issuesNavLabel">Page {pageIndex} loaded in {timer} ms</div>
   {:else}
     <div class="issuesNavLabel">Page {pageIndex} loaded in {responseTime} ms</div>
   {/if}
@@ -54,7 +54,7 @@
 </div>
 
 <style>
-  	.issuesNavWrapper {
+  .issuesNavWrapper {
 		display: flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
@@ -71,7 +71,6 @@
 		color: #0071DC;
 		cursor: pointer;
   }
-  
   .issuesNavLabel {
     display: flex;
     align-self: center;
