@@ -9,7 +9,7 @@
 
   async function getEntities(body) {
     let doc = compromise(body)
-    topics = await doc.toLowerCase().nouns().first(5).out('array');
+    topics = doc.toLowerCase().nouns().first(5).out('array');
     topics.forEach( (topic, index) => {
       topics[index] = topic.replace("[^a-zA-Z]+$", "");
     })
@@ -31,13 +31,18 @@
   $:checkIfSelected(currRowId);
 </script>
 
-<div>
+<div class="issueWrapper">
+  {#if isSelected == false}
+    <div class="arrow">→</div>
+  {:else} 
+    <div class="caret selected"></div>
+  {/if}
   <div>
     <h3 on:click="{setRowIndex}">
       {issue.title}
     </h3>
     <div>Issue #{issue.number} is {issue.state}</div>
-      {#if isSelected != true}
+      {#if isSelected == true}
         <div class="expandedIssue">
           <div>{issue.user.login} says...</div>
           <div>{issue.body}</div>
@@ -56,10 +61,6 @@
 </div>
 
 <style>
-  p {
-		align-items: left;
-    justify-content: left;
-  }
   h3 {
     cursor:pointer;
     display: flex;
@@ -69,6 +70,18 @@
   div {
     padding-top: 0.25em;
     padding-bottom: 0.25em;
+  }
+  .caret {
+    width: 20px;
+    background-color: red;
+  }
+  .selected {
+    background-color: blue;
+  }
+  .issueWrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
   }
   .topics {
     display: flex;
