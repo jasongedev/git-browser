@@ -1,1 +1,1 @@
-# [gitbrowser.com](www.gitbrowser.com)
+# [gitbrowser.com]
