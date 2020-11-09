@@ -1,1 +1,1 @@
-# Issue Browser in Svelte
+# [gitbrowser.com](gitbrowser.com)
