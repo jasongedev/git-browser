@@ -4,8 +4,9 @@
   export let issue;
   export let currRowId;
 
-  let topics: string[] = null;
   let isSelected: boolean = false;
+  let topics: string[] = null;
+  let topicsElement;
 
   async function getEntities(body) {
     let doc = compromise(body)
@@ -32,10 +33,8 @@
 </script>
 
 <div class="issueWrapper">
-  {#if isSelected == false}
-    <div class="arrow">→</div>
-  {:else} 
-    <div class="caret selected"></div>
+  {#if isSelected == true}
+    <div class="selected"></div>
   {/if}
   <div>
     <h3 on:click="{setRowIndex}">
@@ -48,10 +47,9 @@
           <div>{issue.body}</div>
           <small class ="timeStamp">Issue created at {issue.created_at}</small>
         </div>
-      
       {/if}
       {#if topics != null}
-      <div class="topics">
+      <div class="topics" bind:this={topicsElement}>
       {#each topics as topic}
         <div class="topic">{topic}</div>
       {/each}
@@ -67,21 +65,16 @@
     flex-direction: frow;
     color: #0071DC;
   }
-  div {
-    padding-top: 0.25em;
-    padding-bottom: 0.25em;
-  }
-  .caret {
-    width: 20px;
-    background-color: red;
-  }
   .selected {
-    background-color: blue;
+    background-color: #0071DC;
+    min-width: 0.15em;
+    margin-right: 0.6em;
   }
   .issueWrapper {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    margin-top: 2em;
   }
   .topics {
     display: flex;
@@ -93,6 +86,7 @@
     border-radius: 2em;
     border-color: #0071DC;
     border-style: solid;
+    margin-top: 0.25em;
     margin-right: 0.5em;
     padding-left: 0.5em;
     padding-right: 0.5em;

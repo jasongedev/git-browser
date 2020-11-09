@@ -2,7 +2,6 @@
   import {createEventDispatcher, onMount} from 'svelte';
   import {fetchOrg} from './utils/API.svelte';
   import Hoverable from './utils/Hoverable.svelte';
-	import successkid from 'images/successkid.jpg';
   
   export let orgName: string;
   export let projectName: string;
@@ -52,10 +51,10 @@
 <div class="inputsWrapper">
   <figure>
     {#if org == null}
-      <img alt="Empty" src="{successkid}">
+      <div class="placeholder"></div>
     {:else}
       {#await org}
-        <img alt="Loading" src="{successkid}">
+        <div class="placeholder"></div>
       {:then org}
         <img alt="Avatar" src="{org["avatar_url"]}">
       {/await}
@@ -108,6 +107,11 @@
     min-width: 0.6em;
 		font-size: 1em;
     font-family: "Andale Mono", Courier, monospace
+  }
+
+  .placeholder {
+		width: 2.5em;
+		height: 2.5em;
   }
 
 	.inputsWrapper {

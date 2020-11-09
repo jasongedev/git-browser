@@ -3,12 +3,12 @@
 	import IssuesList from '../components/IssuesList.svelte';
 
 	let orgName: string = "jasongedev";
-	let projectName: string = "issue-browser";
+	let projectName: string = "git-browser";
 	let fetchIssuesSignal: boolean = false;
 </script>
 
 <svelte:head>
-	<title>NLP Issue Browser</title>
+	<title>GitBrowser</title>
 </svelte:head>
 
 <h1>
